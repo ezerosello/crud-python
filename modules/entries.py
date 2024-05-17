@@ -3,8 +3,8 @@ from tkinter import *
 def create_label(self, value):
     return Label(self.window, text=value)
 
-def create_entry(self):
-    return Entry(self.window)
+def create_entry(self, textvariable):
+    return Entry(self.window, textvariable=textvariable, width=28)
 
 def place_label(self, all_labels):
     count = 0
