@@ -32,8 +32,11 @@ def create_database(self, connection, cursor, string_display):
 
 def create(self, connection, cursor, data):
 
-    connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
-    cursor = connection.cursor()
+    try:
+        connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
+        cursor = connection.cursor()
+    except mysql.connector.errors.ProgrammingError:
+        return messagebox.showerror("Error", "Debe crear la BBDD")
 
     name = data[1].get()
     last_name = data[2].get()
@@ -61,47 +64,74 @@ def create(self, connection, cursor, data):
 
     return messagebox.showinfo("Éxito!", "Usuario creado correctamente")
 
-def read(self, connection, cursor, data):
+def read(self, connection, cursor, data):    
     
-    print(data[1].get())
-    print(data[2].get())
-    print(data[3].get())
-    print(data[4].get())
-    
-    # connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
-    # cursor = connection.cursor()
+    try:
+        connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
+        cursor = connection.cursor()
+    except mysql.connector.errors.ProgrammingError:
+        return messagebox.showerror("Error", "Debe crear la BBDD")
 
-    
+    cursor.execute("SELECT * FROM USERS")
 
-    # cursor.close()
-    # connection.close()
+    all_users = cursor.fetchall()
+
+    for user in all_users:
+        if user[3] == data[0].get():
+            data[1].set(user[1])
+            data[2].set(user[2])
+            data[3].set(user[3])
+            data[4].set(user[4])
+
+    cursor.close()
+    connection.close()
 
 def update(self, connection, cursor, data):
 
-    print(data[1].get())
-    print(data[2].get())
-    print(data[3].get())
-    print(data[4].get())
+    try:
+        connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
+        cursor = connection.cursor()
+    except mysql.connector.errors.ProgrammingError:
+        return messagebox.showerror("Error", "Debe crear la BBDD")
 
-    # connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
-    # cursor = connection.cursor()
-
+    search_email = data[0].get()
+    name = data[1].get()
+    last_name = data[2].get()
+    email = data[3].get()
+    password = data[4].get()
     
+    cursor.execute(f"UPDATE USERS SET NAME='{name}', LASTNAME='{last_name}', EMAIL='{email}', PASSWORD='{password}' WHERE EMAIL='{search_email}'")
+    
+    if name == '' or last_name == '' or email == '' or password == '':
+        return messagebox.showerror('Error', 'Debe completar todos los campos')
+    elif not (check_email(email)):
+        return messagebox.showerror('Error', 'Debe ingresar un correo electrónico válido')
+    
+    connection.commit()
 
-    # cursor.close()
-    # connection.close()
+    cursor.close()
+    connection.close()
+
+    return messagebox.showinfo("Update", "Usuario actualizado correctamente")
 
 def delete(self, connection, cursor, data):
-   
-    print(data[1].get())
-    print(data[2].get())
-    print(data[3].get())
-    print(data[4].get())
-   
-    # connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
-    # cursor = connection.cursor()
+    try:
+        connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
+        cursor = connection.cursor()
+    except mysql.connector.errors.ProgrammingError:
+        return messagebox.showerror("Error", "Debe crear la BBDD")
 
-    
+    search_email = data[0].get()
 
-    # cursor.close()
-    # connection.close()
+    cursor.execute(f"DELETE FROM USERS WHERE EMAIL='{search_email}'")
+    connection.commit()
+
+    data[1].set('')
+    data[2].set('')
+    data[3].set('')
+    data[4].set('')
+
+    cursor.close()
+    connection.close()
+
+    return messagebox.showinfo("Delete", "Usuario borrado correctamente")
