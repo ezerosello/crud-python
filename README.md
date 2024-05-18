@@ -1,4 +1,4 @@
-Aplicación gráfica de CRUD básico creada en python
+# Aplicación gráfica de CRUD creada en python
 
 ![image](https://github.com/ezerosello/crud-python/assets/115735657/45619e38-55ea-4b33-b92f-c35d51dafd02)
 
