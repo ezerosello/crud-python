@@ -44,13 +44,12 @@ def create(self, data):
     email = data[3].get()
     password = data[4].get()
 
-    cursor.execute("SELECT * FROM USERS")
+    cursor.execute(f"SELECT * FROM USERS WHERE EMAIL='{email}'")
 
-    all_users = cursor.fetchall()
+    user_found = cursor.fetchall()
 
-    for user in all_users:
-        if user[3] == email:
-            return messagebox.showerror('Email error', 'El correo electrónico ingresado ya está registrado')
+    if email == user_found[0][3]:
+        return messagebox.showerror('Email error', 'El correo electrónico ingresado ya está registrado')
         
     if name == '' or last_name == '' or email == '' or password == '':
         return messagebox.showerror('Error', 'Debe completar todos los campos')
@@ -78,16 +77,23 @@ def read(self, data):
     except mysql.connector.errors.ProgrammingError:
         return messagebox.showerror("Error", "Debe crear la BBDD")
 
-    cursor.execute("SELECT * FROM USERS")
+    email_search = data[0].get()
 
-    all_users = cursor.fetchall()
+    cursor.execute(f"SELECT * FROM USERS WHERE EMAIL='{email_search}'")
 
-    for user in all_users:
-        if user[3] == data[0].get():
-            data[1].set(user[1])
-            data[2].set(user[2])
-            data[3].set(user[3])
-            data[4].set(user[4])
+    user_found = cursor.fetchall()
+
+    if user_found == []:
+        data[1].set('')
+        data[2].set('')
+        data[3].set('')
+        data[4].set('')
+        return messagebox.showinfo("Read", "No hay ningún usuario registrado con esa dirección de correo")
+    else:
+        data[1].set(user_found[0][1])
+        data[2].set(user_found[0][2])
+        data[3].set(user_found[0][3])
+        data[4].set(user_found[0][4])
 
     cursor.close()
     connection.close()
