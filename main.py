@@ -1,5 +1,4 @@
 from tkinter import *
-import mysql.connector
 
 from modules.buttonBox import *
 from modules.functionsCRUD import *
@@ -12,14 +11,6 @@ class Window():
         self.window = window
         self.window.title('CRUD Python')
         self.window.resizable(0,0)
-
-        # ---- Database connection ---- #
-        try:
-            connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
-        except mysql.connector.errors.ProgrammingError:
-            connection = mysql.connector.connect(host="localhost", database="", user="root", password="")
-
-        cursor = connection.cursor()
 
         # ---- Entries ---- #
         label_search = create_label(self, 'Búsqueda por email:')
@@ -50,21 +41,15 @@ class Window():
         place_entry(self, all_entries)
 
         # ---- Button Box ---- #
-
-        button_create_database = create_button(self, 'Create\nDatabase', create_database, connection, cursor, data)
-        button_create = create_button(self, 'Create', create, connection, cursor, data)
-        button_read = create_button(self, 'Read', read, connection, cursor, data)
-        button_update = create_button(self, 'Update', update, connection, cursor, data)
-        button_delete = create_button(self, 'Delete', delete, connection, cursor, data)
+        button_create_database = create_button(self, 'Create\nDatabase', create_database, data)
+        button_create = create_button(self, 'Create', create, data)
+        button_read = create_button(self, 'Read', read, data)
+        button_update = create_button(self, 'Update', update, data)
+        button_delete = create_button(self, 'Delete', delete, data)
 
         buttons = [button_create_database, button_create, button_read, button_update, button_delete]
 
         place_button(self, buttons)
-
-        # ---- Close connection ---- #
-
-        cursor.close()
-        connection.close()
 
 aplicacion = Window(root)
 

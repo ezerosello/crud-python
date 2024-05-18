@@ -11,7 +11,7 @@ def check_email(email):
     except EmailNotValidError as e:
         return False
 
-def create_database(self, connection, cursor, string_display):
+def create_database(self, string_display):
     connection = mysql.connector.connect(host="localhost", database="", user="root", password="")
 
     try:    
@@ -24,13 +24,14 @@ def create_database(self, connection, cursor, string_display):
     try:
         cursor.execute("CREATE TABLE USERS (ID INT PRIMARY KEY AUTO_INCREMENT, NAME VARCHAR(50), LASTNAME VARCHAR(50), EMAIL VARCHAR(50), PASSWORD VARCHAR(20))")
         connection.commit()
+        messagebox.showinfo("Crear BBDD", "Base de datos creada correctamente")
     except mysql.connector.errors.ProgrammingError:
-        pass
+        messagebox.showinfo("Crear BBDD", "La base de datos ya existe")
 
     cursor.close()
     connection.close()
 
-def create(self, connection, cursor, data):
+def create(self, data):
 
     try:
         connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
@@ -59,12 +60,17 @@ def create(self, connection, cursor, data):
     cursor.execute(f"INSERT INTO USERS (NAME, LASTNAME, EMAIL, PASSWORD) VALUES ('{name}', '{last_name}', '{email}', '{password}')")    
     connection.commit()
 
+    data[1].set('')
+    data[2].set('')
+    data[3].set('')
+    data[4].set('')
+
     cursor.close()
     connection.close()
 
     return messagebox.showinfo("Éxito!", "Usuario creado correctamente")
 
-def read(self, connection, cursor, data):    
+def read(self, data):    
     
     try:
         connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
@@ -86,7 +92,7 @@ def read(self, connection, cursor, data):
     cursor.close()
     connection.close()
 
-def update(self, connection, cursor, data):
+def update(self, data):
 
     try:
         connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
@@ -109,12 +115,17 @@ def update(self, connection, cursor, data):
     
     connection.commit()
 
+    data[1].set('')
+    data[2].set('')
+    data[3].set('')
+    data[4].set('')
+
     cursor.close()
     connection.close()
 
     return messagebox.showinfo("Update", "Usuario actualizado correctamente")
 
-def delete(self, connection, cursor, data):
+def delete(self, data):
     try:
         connection = mysql.connector.connect(host="localhost", database="CRUDUSERS", user="root", password="")
         cursor = connection.cursor()
