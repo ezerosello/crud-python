@@ -46,11 +46,12 @@ class Window():
         button_read = create_button(self, 'Read', read, data)
         button_update = create_button(self, 'Update', update, data)
         button_delete = create_button(self, 'Delete', delete, data)
+        button_clear = create_button(self, 'Borrar\nCampos', clear, data)
 
-        buttons = [button_create_database, button_create, button_read, button_update, button_delete]
+        buttons = [button_create_database, button_create, button_read, button_update, button_delete, button_clear]
 
         place_button(self, buttons)
 
-aplicacion = Window(root)
+app = Window(root)
 
 root.mainloop()

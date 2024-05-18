@@ -15,5 +15,5 @@ def place_label(self, all_labels):
 def place_entry(self, all_entries):
     count = 0
     for row in range(len(all_entries)):
-        all_entries[count].grid(row=row, column=2, columnspan=2, pady=10)
+        all_entries[count].grid(row=row, column=2, columnspan=3, pady=10)
         count += 1

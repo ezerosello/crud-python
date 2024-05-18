@@ -172,3 +172,10 @@ def delete(self, data):
     connection.close()
 
     return messagebox.showinfo("Delete", "Usuario borrado correctamente")
+
+def clear(self, data):
+    data[0].set('')
+    data[1].set('')
+    data[2].set('')
+    data[3].set('')
+    data[4].set('')
