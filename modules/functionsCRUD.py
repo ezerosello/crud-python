@@ -48,13 +48,12 @@ def create(self, data):
 
     user_found = cursor.fetchall()
 
-    if email == user_found[0][3]:
-        return messagebox.showerror('Email error', 'El correo electrónico ingresado ya está registrado')
-        
     if name == '' or last_name == '' or email == '' or password == '':
         return messagebox.showerror('Error', 'Debe completar todos los campos')
     elif not (check_email(email)):
         return messagebox.showerror('Error', 'Debe ingresar un correo electrónico válido')
+    elif user_found != [] and email == user_found[0][3]:
+        return messagebox.showerror('Email error', 'El correo electrónico ingresado ya está registrado')
         
     cursor.execute(f"INSERT INTO USERS (NAME, LASTNAME, EMAIL, PASSWORD) VALUES ('{name}', '{last_name}', '{email}', '{password}')")    
     connection.commit()
@@ -83,7 +82,9 @@ def read(self, data):
 
     user_found = cursor.fetchall()
 
-    if user_found == []:
+    if data[0].get() == '':
+        return messagebox.showinfo("Read", "Debe ingresar una dirección de correo para buscar")
+    elif user_found == []:
         data[1].set('')
         data[2].set('')
         data[3].set('')
@@ -111,10 +112,18 @@ def update(self, data):
     last_name = data[2].get()
     email = data[3].get()
     password = data[4].get()
+
+    cursor.execute(f"SELECT * FROM USERS WHERE EMAIL='{search_email}'")
+    user_found = cursor.fetchall()
+    if user_found == []:
+        data[0].set('')
+        return messagebox.showerror("Delete", "El usuario que quiere actualizar no existe")
     
     cursor.execute(f"UPDATE USERS SET NAME='{name}', LASTNAME='{last_name}', EMAIL='{email}', PASSWORD='{password}' WHERE EMAIL='{search_email}'")
     
-    if name == '' or last_name == '' or email == '' or password == '':
+    if search_email == '':
+        return messagebox.showinfo("Update", "Debe ingresar el correo del usuario a modificar")
+    elif name == '' or last_name == '' or email == '' or password == '':
         return messagebox.showerror('Error', 'Debe completar todos los campos')
     elif not (check_email(email)):
         return messagebox.showerror('Error', 'Debe ingresar un correo electrónico válido')
@@ -147,6 +156,17 @@ def delete(self, data):
     data[2].set('')
     data[3].set('')
     data[4].set('')
+
+    if search_email == '':
+        return messagebox.showinfo("Delete", "Debe ingresar el correo del usuario que desea eliminar")
+    
+    cursor.execute(f"SELECT * FROM USERS WHERE EMAIL='{search_email}'")
+
+    user_found = cursor.fetchall()
+
+    if user_found == []:
+        data[0].set('')
+        return messagebox.showerror("Delete", "El usuario que quiere eliminar no existe")
 
     cursor.close()
     connection.close()
